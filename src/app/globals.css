@@ -188,14 +188,14 @@ body::before {
 /* Firefly floating animation */
 @keyframes floatFirefly {
   0%, 100% {
-    transform: translateY(0) translateX(0);
+    transform: translateY(0) translateX(0) scale(0.8);
     opacity: 0;
   }
   10% {
     opacity: 0.7;
   }
   50% {
-    transform: translateY(-80px) translateX(30px);
+    transform: translateY(-120px) translateX(15px) scale(1.2);
     opacity: 0.9;
   }
   80% {
@@ -204,6 +204,28 @@ body::before {
   95% {
     opacity: 0;
   }
+}
+
+.animate-firefly {
+  animation: floatFirefly 12s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Sparkles (✦ and ✨) floating animation */
+@keyframes sparkling {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.25) rotate(15deg);
+  }
+}
+
+.animate-sparkling {
+  animation: sparkling 5s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 /* Shimmer shine animation */
@@ -291,6 +313,7 @@ body::before {
 
 .animate-twinkle {
   animation: twinkle 4s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 /* Custom scrollbar matching gold theme */

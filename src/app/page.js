@@ -193,7 +193,7 @@ function PlantCard({ imageSrc, name, description }) {
   );
 }
 
-/* ── Ambient Fireflies Component ── */
+/* ── Ambient Fireflies Component (GPU Accelerated CSS) ── */
 function AmbientFireflies() {
   const [fireflies, setFireflies] = useState([]);
 
@@ -212,27 +212,17 @@ function AmbientFireflies() {
   return (
     <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
       {fireflies.map((f) => (
-        <motion.div
+        <div
           key={f.id}
-          className="absolute rounded-full bg-gradient-to-r from-[#FF9F43] to-[#E8C86B] opacity-0"
+          className="absolute rounded-full bg-gradient-to-r from-[#FF9F43] to-[#E8C86B] opacity-0 animate-firefly"
           style={{
             left: f.left,
             top: f.top,
-            width: f.size,
-            height: f.size,
+            width: `${f.size}px`,
+            height: `${f.size}px`,
             boxShadow: "0 0 8px #FF9F43, 0 0 16px #E8C86B",
-          }}
-          animate={{
-            y: [0, -180 - Math.random() * 100, 0],
-            x: [0, Math.random() * 40 - 20, 0],
-            opacity: [0, 0.8, 0.9, 0.4, 0],
-            scale: [0.8, 1.2, 0.8],
-          }}
-          transition={{
-            duration: f.duration,
-            repeat: Infinity,
-            delay: f.delay,
-            ease: "easeInOut",
+            animationDelay: `${f.delay}s`,
+            animationDuration: `${f.duration}s`,
           }}
         />
       ))}
@@ -276,7 +266,7 @@ function ShamanicCosmicStars() {
         }
 
         return (
-          <motion.div
+          <div
             key={s.id}
             className="absolute rounded-full animate-twinkle"
             style={{
@@ -296,7 +286,7 @@ function ShamanicCosmicStars() {
   );
 }
 
-/* ── Scrolling Sparkles for Body Sections ── */
+/* ── Scrolling Sparkles for Body Sections (GPU Accelerated CSS) ── */
 function ScrollingSparkles({ count = 8, className = "" }) {
   const [sparkles, setSparkles] = useState([]);
 
@@ -321,30 +311,21 @@ function ScrollingSparkles({ count = 8, className = "" }) {
   return (
     <div className={`absolute inset-0 pointer-events-none overflow-hidden select-none z-10 ${className}`}>
       {sparkles.map((s) => (
-        <motion.div
+        <div
           key={s.id}
-          className="absolute font-semibold select-none pointer-events-none"
+          className="absolute font-semibold select-none pointer-events-none animate-sparkling"
           style={{
             left: s.left,
             top: s.top,
             fontSize: `${s.size}px`,
             color: "var(--dynamic-gold)",
             textShadow: "0 0 8px var(--dynamic-gold-glow)",
-          }}
-          animate={{
-            scale: [0.8, 1.25, 0.8],
-            opacity: [0.2, 0.85, 0.2],
-            rotate: [0, 15, -15, 0],
-          }}
-          transition={{
-            duration: s.duration,
-            repeat: Infinity,
-            delay: s.delay,
-            ease: "easeInOut",
+            animationDelay: `${s.delay}s`,
+            animationDuration: `${s.duration}s`,
           }}
         >
           {s.char}
-        </motion.div>
+        </div>
       ))}
     </div>
   );
@@ -539,7 +520,7 @@ export default function Home() {
       {/* Desktop-Only Side Vines (Left and Right Frame) */}
       <motion.div
         className="fixed left-0 top-0 h-full w-[100px] xl:w-[125px] pointer-events-none z-30 hidden lg:block overflow-hidden"
-        style={{ opacity: dynamicSideVineOpacity, mixBlendMode: "screen" }}
+        style={{ opacity: dynamicSideVineOpacity }}
       >
         <Image
           src="/assets/ayahuasca_border.png"
@@ -551,7 +532,7 @@ export default function Home() {
       </motion.div>
       <motion.div
         className="fixed right-0 top-0 h-full w-[100px] xl:w-[125px] pointer-events-none z-30 hidden lg:block overflow-hidden"
-        style={{ opacity: dynamicSideVineOpacity, mixBlendMode: "screen" }}
+        style={{ opacity: dynamicSideVineOpacity }}
       >
         <Image
           src="/assets/ayahuasca_border.png"
