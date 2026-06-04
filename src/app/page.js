@@ -13,6 +13,9 @@ import Countdown from "../components/ui/Countdown";
 import LanguageToggle from "../components/ui/LanguageToggle";
 import TiltCard from "../components/ui/TiltCard";
 import AudioPlayer from "../components/ui/AudioPlayer";
+import { Sparkles, Heart, Check, Send } from "lucide-react";
+import { triggerGoldConfetti } from "../components/animations/GoldConfetti";
+import SacredGeometry3D from "../components/animations/SacredGeometry3D";
 
 /* ── Reusable Section Fade-In ── */
 function FadeSection({ children, className = "", delay = 0 }) {
@@ -97,7 +100,7 @@ function GoldDiamond() {
         height="9"
         rx="1"
         transform="rotate(45 7 0)"
-        fill="#E8C86B"
+        fill="var(--dynamic-gold)"
       />
     </svg>
   );
@@ -105,7 +108,7 @@ function GoldDiamond() {
 
 function SunMoonSymbol() {
   return (
-    <div className="flex items-center justify-center gap-3 text-[#E8C86B] text-xl select-none">
+    <div className="flex items-center justify-center gap-3 text-xl select-none" style={{ color: "var(--dynamic-gold)" }}>
       <span>☽</span>
       <span className="text-2xl animate-pulse">✦</span>
       <span>☉</span>
@@ -116,9 +119,9 @@ function SunMoonSymbol() {
 function GoldSeparator() {
   return (
     <div className="flex items-center justify-center gap-3 my-8 sm:my-14">
-      <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#E8C86B]/60" />
-      <span className="text-[#E8C86B] text-sm animate-pulse">✦ ✦ ✦</span>
-      <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#E8C86B]/60" />
+      <div className="h-px w-16 bg-gradient-to-r from-transparent to-[var(--dynamic-gold)]/60" />
+      <span className="text-sm animate-pulse" style={{ color: "var(--dynamic-gold)" }}>✦ ✦ ✦</span>
+      <div className="h-px w-16 bg-gradient-to-l from-transparent to-[var(--dynamic-gold)]/60" />
     </div>
   );
 }
@@ -127,33 +130,33 @@ function GoldSeparator() {
 function CeremonyCard({ iconSrc, iconAlt, title, description, detail, extraDetail }) {
   return (
     <TiltCard className="w-full">
-      <div className="glass-card p-5 sm:p-6 text-center flex flex-col items-center gap-3 h-full border border-[#E8C86B]/20">
+      <div className="glass-card p-5 sm:p-6 text-center flex flex-col items-center gap-3 h-full">
         <div className="w-14 h-14 sm:w-16 sm:h-16 relative mb-1">
           <Image
             src={iconSrc}
             alt={iconAlt || title}
             fill
-            className="object-contain opacity-95"
-            style={{ filter: "brightness(0) invert(1)" }}
+            className="object-contain opacity-95 transition-all duration-300"
+            style={{ filter: "var(--dynamic-icon-filter, brightness(0) invert(1))" }}
             sizes="64px"
           />
         </div>
         <h4
-          className="text-xs uppercase tracking-[0.25em] font-semibold animate-text-glow"
-          style={{ color: "var(--color-gold)", fontFamily: "var(--font-heading)" }}
+          className="text-xs uppercase tracking-[0.25em] font-semibold animate-text-glow dyn-text-gold"
+          style={{ fontFamily: "var(--font-heading)" }}
         >
           {title}
         </h4>
-        <p className="text-base sm:text-lg font-semibold tracking-wide text-white animate-white-glow">
+        <p className="text-base sm:text-lg font-semibold tracking-wide dyn-text-title animate-white-glow">
           {description}
         </p>
         {detail && (
-          <p className="text-xs sm:text-sm text-gray-300/80 leading-relaxed font-light">
+          <p className="text-xs sm:text-sm leading-relaxed font-normal dyn-text-body">
             {detail}
           </p>
         )}
         {extraDetail && (
-          <p className="text-xs italic text-[#E8C86B]/90 mt-auto font-medium animate-text-glow">
+          <p className="text-xs italic mt-auto font-medium dyn-text-gold animate-text-glow">
             {extraDetail}
           </p>
         )}
@@ -166,7 +169,7 @@ function CeremonyCard({ iconSrc, iconAlt, title, description, detail, extraDetai
 function PlantCard({ imageSrc, name, description }) {
   return (
     <TiltCard className="w-full">
-      <div className="glass-card p-5 sm:p-6 text-center flex flex-col items-center gap-4 h-full border border-green-900/30 hover:border-[#E8C86B]/30">
+      <div className="glass-card p-5 sm:p-6 text-center flex flex-col items-center gap-4 h-full">
         <div className="w-20 h-20 sm:w-24 sm:h-24 relative filter drop-shadow-[0_0_10px_rgba(30,100,45,0.35)] transition-transform duration-500 hover:scale-105">
           <Image
             src={imageSrc}
@@ -177,12 +180,12 @@ function PlantCard({ imageSrc, name, description }) {
           />
         </div>
         <h4
-          className="text-sm uppercase tracking-widest font-semibold animate-text-glow"
-          style={{ color: "var(--color-gold)", fontFamily: "var(--font-heading)" }}
+          className="text-sm uppercase tracking-widest font-semibold animate-text-glow dyn-text-gold"
+          style={{ fontFamily: "var(--font-heading)" }}
         >
           {name}
         </h4>
-        <p className="text-xs sm:text-sm leading-relaxed text-gray-300/90 font-light">
+        <p className="text-xs sm:text-sm leading-relaxed font-normal dyn-text-body">
           {description}
         </p>
       </div>
@@ -237,23 +240,23 @@ function AmbientFireflies() {
   );
 }
 
-/* ── Twinkling Stars Background Component ── */
-function CelestialStars() {
+/* ── Unified Shamanic Cosmic Stars (Real-time Scroll Adaptable) ── */
+function ShamanicCosmicStars() {
   const [stars, setStars] = useState([]);
 
   useEffect(() => {
-    const starList = Array.from({ length: 250 }).map((_, i) => {
-      const isGold = Math.random() > 0.8;
-      const size = Math.random() * 2.2 + 0.6; // 0.6px to 2.8px
+    const starList = Array.from({ length: 450 }).map((_, i) => {
+      const type = Math.random() > 0.80 ? "gold" : Math.random() > 0.45 ? "white-star" : "tiny";
+      let size = Math.random() * 1.2 + 0.7; // tiny default (0.7px to 1.9px)
+      if (type === "white-star") size = Math.random() * 1.5 + 1.4; // (1.4px to 2.9px)
+      if (type === "gold") size = Math.random() * 2.2 + 2.0; // (2.0px to 4.2px)
+
       return {
         id: i,
         left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`, // Spans across the entire viewport
+        top: `${Math.random() * 100}%`,
         size,
-        color: isGold ? "#E8C86B" : "#FFFFFF",
-        shadow: isGold
-          ? "0 0 6px #E8C86B, 0 0 10px rgba(232,200,107,0.5)"
-          : "0 0 6px #FFF, 0 0 10px rgba(255,255,255,0.5)",
+        type,
         delay: Math.random() * 8,
         duration: Math.random() * 6 + 4, // 4s to 10s
       };
@@ -263,21 +266,85 @@ function CelestialStars() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
-      {stars.map((s) => (
+      {stars.map((s) => {
+        let color = "var(--dynamic-star-color)";
+        let shadow = "0 0 6px var(--dynamic-star-glow)";
+        
+        if (s.type === "gold") {
+          color = "var(--dynamic-gold)";
+          shadow = "0 0 8px var(--dynamic-gold-glow), 0 0 14px var(--dynamic-gold-glow)";
+        }
+
+        return (
+          <motion.div
+            key={s.id}
+            className="absolute rounded-full animate-twinkle"
+            style={{
+              left: s.left,
+              top: s.top,
+              width: s.size,
+              height: s.size,
+              backgroundColor: color,
+              boxShadow: s.size > 1.3 ? shadow : "none",
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Scrolling Sparkles for Body Sections ── */
+function ScrollingSparkles({ count = 8, className = "" }) {
+  const [sparkles, setSparkles] = useState([]);
+
+  useEffect(() => {
+    const items = Array.from({ length: count }).map((_, i) => {
+      const isAsterisk = Math.random() > 0.4;
+      const char = isAsterisk ? "✦" : "✨";
+      const size = isAsterisk ? Math.random() * 8 + 8 : Math.random() * 10 + 10; // 8-16px for asterisks, 10-20px for sparkles
+      return {
+        id: i,
+        left: `${Math.random() * 90 + 5}%`,
+        top: `${Math.random() * 90 + 5}%`,
+        size,
+        char,
+        delay: Math.random() * 5,
+        duration: Math.random() * 4 + 3, // 3s to 7s
+      };
+    });
+    setSparkles(items);
+  }, [count]);
+
+  return (
+    <div className={`absolute inset-0 pointer-events-none overflow-hidden select-none z-10 ${className}`}>
+      {sparkles.map((s) => (
         <motion.div
           key={s.id}
-          className="absolute rounded-full animate-twinkle"
+          className="absolute font-semibold select-none pointer-events-none"
           style={{
             left: s.left,
             top: s.top,
-            width: s.size,
-            height: s.size,
-            backgroundColor: s.color,
-            boxShadow: s.size > 1.6 ? s.shadow : "none",
-            animationDelay: `${s.delay}s`,
-            animationDuration: `${s.duration}s`,
+            fontSize: `${s.size}px`,
+            color: "var(--dynamic-gold)",
+            textShadow: "0 0 8px var(--dynamic-gold-glow)",
           }}
-        />
+          animate={{
+            scale: [0.8, 1.25, 0.8],
+            opacity: [0.2, 0.85, 0.2],
+            rotate: [0, 15, -15, 0],
+          }}
+          transition={{
+            duration: s.duration,
+            repeat: Infinity,
+            delay: s.delay,
+            ease: "easeInOut",
+          }}
+        >
+          {s.char}
+        </motion.div>
       ))}
     </div>
   );
@@ -288,17 +355,25 @@ function ShootingStars() {
   const [meteors, setMeteors] = useState([]);
 
   useEffect(() => {
-    // Generate a new meteor every few seconds
     const interval = setInterval(() => {
+      const rotation = Math.random() * 15 - 40; // -25deg to -55deg
+      const size = Math.random() * 1.2 + 1.0; // thickness
+      const width = Math.random() * 100 + 120; // trace width (120px to 220px)
+      const distance = Math.random() * 150 + 250; // travel distance
+      
       const newMeteor = {
         id: Date.now() + Math.random(),
-        x: Math.random() * 80 + 10, // Starts at 10% to 90% width
-        y: Math.random() * 25 + 5,  // Starts at 5% to 30% height (upper sky)
-        delay: Math.random() * 1.5,
-        duration: Math.random() * 1.0 + 0.8, // 0.8s to 1.8s speed
+        x: Math.random() * 85 + 5,
+        y: Math.random() * 30 + 5,
+        delay: Math.random() * 0.4,
+        duration: Math.random() * 0.6 + 0.5, // 0.5s to 1.1s (fast!)
+        rotation,
+        size,
+        width,
+        distance,
       };
-      setMeteors((prev) => [...prev.slice(-3), newMeteor]); // Keep last 4 meteors in DOM
-    }, 3200);
+      setMeteors((prev) => [...prev.slice(-7), newMeteor]);
+    }, 700);
 
     return () => clearInterval(interval);
   }, []);
@@ -308,19 +383,23 @@ function ShootingStars() {
       {meteors.map((m) => (
         <motion.div
           key={m.id}
-          className="absolute h-[1.5px] bg-gradient-to-r from-[#E8C86B] via-[#E8C86B]/50 to-transparent"
-          initial={{
+          className="absolute bg-gradient-to-r from-[var(--dynamic-gold)] via-[var(--dynamic-gold)]/40 to-transparent"
+          style={{
+            height: `${m.size}px`,
             left: `${m.x}%`,
             top: `${m.y}%`,
+            transform: `rotate(${m.rotation}deg)`,
+            transformOrigin: "left center",
+          }}
+          initial={{
             width: "0px",
             opacity: 0,
-            transform: "rotate(-35deg)",
           }}
           animate={{
-            width: ["0px", "140px", "0px"],
-            x: [0, 300],
-            y: [0, 210],
-            opacity: [0, 0.9, 0.9, 0],
+            width: ["0px", `${m.width}px`, "0px"],
+            x: [0, m.distance],
+            y: [0, m.distance * Math.tan((Math.abs(m.rotation) * Math.PI) / 180)],
+            opacity: [0, 0.95, 0.95, 0],
           }}
           transition={{
             duration: m.duration,
@@ -348,10 +427,56 @@ export default function Home() {
   const storyRef = useRef(null);
 
   /* Scroll mappings bound directly to native scroll for maximum hardware performance and no lag */
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.08, 1.22]);
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
-  // Maintain background visibility throughout the scroll journey
-  const bgOpacity = useTransform(scrollYProgress, [0, 1], [0.38, 0.28]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1.45, 1.55]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
+  
+  // Transition between deep night and warm sunrise backgrounds
+  const nightBgOpacity = useTransform(scrollYProgress, [0.02, 0.20], [0.38, 0]);
+  const dawnBgOpacity = useTransform(scrollYProgress, [0.02, 0.20], [0, 0.85]);
+
+  // Fade out celestial elements (fireflies & shooting stars) as sunrise rolls in
+  const starsOpacity = useTransform(scrollYProgress, [0.02, 0.20], [1, 0]);
+
+  // Interpolate dynamic colors for text, headings, cards, and buttons on scroll (Warm Amber Sunrise theme)
+  const dynamicBg = useTransform(scrollYProgress, [0.02, 0.20], ["#040905", "#FAF3E8"]);
+  const dynamicText = useTransform(scrollYProgress, [0.00, 0.10], ["#E5E9E6", "#050A05"]);
+  const dynamicTitle = useTransform(scrollYProgress, [0.00, 0.10], ["#FFFFFF", "#000000"]);
+  const dynamicGold = useTransform(scrollYProgress, [0.00, 0.10], ["#E8C86B", "#8A6000"]);
+  const dynamicCardBg = useTransform(scrollYProgress, [0.02, 0.20], ["rgba(10, 24, 14, 0.55)", "rgba(255, 255, 255, 0.45)"]);
+  const dynamicCardBorder = useTransform(scrollYProgress, [0.02, 0.20], ["rgba(232, 200, 107, 0.18)", "rgba(153, 115, 28, 0.22)"]);
+  const dynamicCardBorderHover = useTransform(scrollYProgress, [0.02, 0.20], ["rgba(232, 200, 107, 0.4)", "rgba(153, 115, 28, 0.45)"]);
+  const dynamicShadow = useTransform(scrollYProgress, [0.02, 0.20], ["rgba(0, 0, 0, 0.5)", "rgba(153, 115, 28, 0.04)"]);
+  const dynamicShadowHover = useTransform(scrollYProgress, [0.02, 0.20], ["rgba(232, 200, 107, 0.08)", "rgba(153, 115, 28, 0.08)"]);
+  const dynamicBtnBg = useTransform(scrollYProgress, [0.02, 0.20], [
+    "linear-gradient(135deg, #E8C86B, #C5A85A)",
+    "linear-gradient(135deg, #8A6000, #C5A85A)"
+  ]);
+  const dynamicBtnText = useTransform(scrollYProgress, [0.02, 0.20], ["#000000", "#FFFFFF"]);
+  const dynamicIconFilter = useTransform(scrollYProgress, [0.00, 0.10], [
+    "brightness(0) invert(1)",
+    "brightness(0) invert(0)"
+  ]);
+  const dynamicMapFilter = useTransform(scrollYProgress, [0.02, 0.20], [
+    "invert(90%) hue-rotate(180deg) brightness(85%) contrast(95%)",
+    "invert(0%) hue-rotate(0deg) brightness(100%) contrast(100%)"
+  ]);
+  const dynamicTitleGlow = useTransform(scrollYProgress, [0.00, 0.10], [
+    "rgba(255, 255, 255, 0.4)",
+    "rgba(232, 200, 107, 0.85)"
+  ]);
+  const dynamicGoldGlow = useTransform(scrollYProgress, [0.00, 0.10], [
+    "rgba(232, 200, 107, 0.45)",
+    "rgba(153, 115, 28, 0.5)"
+  ]);
+  const dynamicStarColor = useTransform(scrollYProgress, [0.00, 0.10], [
+    "rgba(255, 255, 255, 0.85)",
+    "rgba(138, 96, 0, 0.85)"
+  ]);
+  const dynamicStarGlow = useTransform(scrollYProgress, [0.00, 0.10], [
+    "rgba(255, 255, 255, 0.6)",
+    "rgba(138, 96, 0, 0.25)"
+  ]);
+  const dynamicSideVineOpacity = useTransform(scrollYProgress, [0.02, 0.20], [0.8, 0.55]);
 
   /* Smooth scroll to Story section */
   const scrollToStory = () => {
@@ -366,36 +491,100 @@ export default function Home() {
     e.preventDefault();
     const attendText =
       formData.attendance === "yes" ? t("rsvp.yes") : t("rsvp.no");
+
+    if (formData.attendance === "yes") {
+      triggerGoldConfetti();
+    }
+
     const template = t("rsvp.whatsappTextTemplate")
       .replace("{name}", formData.name)
       .replace("{attendance}", attendText)
       .replace("{message}", formData.message || "—");
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(template)}`;
-    window.open(url, "_blank");
+    
+    // Delay WhatsApp redirect slightly to allow the guest to appreciate the golden confetti burst
+    setTimeout(() => {
+      window.open(url, "_blank");
+    }, 1200);
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden selection:bg-[#E8C86B]/30 perspective-container">
+    <motion.div
+      style={{
+        "--dynamic-bg": dynamicBg,
+        "--dynamic-text": dynamicText,
+        "--dynamic-title": dynamicTitle,
+        "--dynamic-gold": dynamicGold,
+        "--dynamic-card-bg": dynamicCardBg,
+        "--dynamic-card-border": dynamicCardBorder,
+        "--dynamic-card-border-hover": dynamicCardBorderHover,
+        "--dynamic-shadow": dynamicShadow,
+        "--dynamic-shadow-hover": dynamicShadowHover,
+        "--dynamic-btn-bg": dynamicBtnBg,
+        "--dynamic-btn-text": dynamicBtnText,
+        "--dynamic-icon-filter": dynamicIconFilter,
+        "--dynamic-map-filter": dynamicMapFilter,
+        "--dynamic-title-glow": dynamicTitleGlow,
+        "--dynamic-gold-glow": dynamicGoldGlow,
+        "--dynamic-star-color": dynamicStarColor,
+        "--dynamic-star-glow": dynamicStarGlow,
+        backgroundColor: dynamicBg,
+        color: dynamicText,
+      }}
+      className="relative min-h-screen overflow-x-hidden selection:bg-[#E8C86B]/30 perspective-container transition-colors duration-300"
+    >
       <LanguageToggle />
       <AudioPlayer />
 
-      {/* Ambient glowing orbs */}
-      <div className="glow-green top-[12%] left-[-150px] opacity-80" />
-      <div className="glow-amber top-[35%] right-[-200px] opacity-70" />
-      <div className="glow-green top-[65%] left-[10%] opacity-60" />
-      <div className="glow-amber top-[80%] right-[15%] opacity-50" />
+      {/* Desktop-Only Side Vines (Left and Right Frame) */}
+      <motion.div
+        className="fixed left-0 top-0 h-full w-[100px] xl:w-[125px] pointer-events-none z-30 hidden lg:block overflow-hidden"
+        style={{ opacity: dynamicSideVineOpacity, mixBlendMode: "screen" }}
+      >
+        <Image
+          src="/assets/ayahuasca_border.png"
+          alt="Ayahuasca Liana Left"
+          fill
+          className="object-cover object-left"
+          priority
+        />
+      </motion.div>
+      <motion.div
+        className="fixed right-0 top-0 h-full w-[100px] xl:w-[125px] pointer-events-none z-30 hidden lg:block overflow-hidden"
+        style={{ opacity: dynamicSideVineOpacity, mixBlendMode: "screen" }}
+      >
+        <Image
+          src="/assets/ayahuasca_border.png"
+          alt="Ayahuasca Liana Right"
+          fill
+          className="object-cover object-left scale-x-[-1]"
+          priority
+        />
+      </motion.div>
 
-      {/* Floating Shamanic Fireflies & Sparkling Stars */}
-      <CelestialStars />
-      <AmbientFireflies />
-      <ShootingStars />
+      {/* Ambient glowing orbs (only active in night phase) */}
+      <motion.div style={{ opacity: starsOpacity }} className="pointer-events-none">
+        <div className="glow-green top-[12%] left-[-150px] opacity-80" />
+        <div className="glow-amber top-[35%] right-[-200px] opacity-70" />
+        <div className="glow-green top-[65%] left-[10%] opacity-60" />
+        <div className="glow-amber top-[80%] right-[15%] opacity-50" />
+      </motion.div>
 
-      {/* ── BACKGROUND RIVER IMAGE ── */}
+      {/* Floating Shamanic Fireflies & Shooting Stars (Fade out in dawn) */}
+      <motion.div style={{ opacity: starsOpacity }} className="pointer-events-none">
+        <AmbientFireflies />
+        <ShootingStars />
+      </motion.div>
+
+      {/* Unified Shamanic Cosmic Stars (Always active, color shifts dynamically on scroll) */}
+      <ShamanicCosmicStars />
+
+      {/* ── BACKGROUND LAYER: NIGHT ── */}
       <motion.div
         className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
         style={{
           scale: bgScale,
-          opacity: bgOpacity,
+          opacity: nightBgOpacity,
           y: bgY,
           transformStyle: "preserve-3d",
           translateZ: -450,
@@ -408,8 +597,28 @@ export default function Home() {
           className="object-cover"
           priority
         />
-        {/* Dark shading mask */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#040905]/95 via-transparent to-[#040905]" />
+      </motion.div>
+
+      {/* ── BACKGROUND LAYER: DAWN ── */}
+      <motion.div
+        className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
+        style={{
+          scale: bgScale,
+          opacity: dawnBgOpacity,
+          y: bgY,
+          transformStyle: "preserve-3d",
+          translateZ: -450,
+        }}
+      >
+        <Image
+          src="/assets/jungle_dawn_bg.png"
+          alt="Jungle sunrise background río Mayo"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF3E8]/80 via-transparent to-[#FAF3E8]" />
       </motion.div>
 
 
@@ -423,12 +632,16 @@ export default function Home() {
             <div className="flex justify-center mb-8">
               <motion.button
                 onClick={scrollToStory}
-                className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-black/40 border border-[#E8C86B]/30 hover:border-[#E8C86B]/70 shadow-lg shadow-[#E8C86B]/10 animate-moon-glow cursor-pointer"
+                className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-black/40 border animate-moon-glow cursor-pointer"
+                style={{
+                  borderColor: "var(--dynamic-gold)",
+                  boxShadow: "0 10px 15px -3px var(--dynamic-gold-glow)",
+                }}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label="Scroll to Story"
               >
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-[#E8C86B] sm:w-[32px] sm:h-[32px]">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="sm:w-[32px] sm:h-[32px]" style={{ color: "var(--dynamic-gold)" }}>
                   <path
                     d="M12 3c.132 0 .263 0 .393.007a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 3z"
                     fill="currentColor"
@@ -438,7 +651,7 @@ export default function Home() {
               </motion.button>
             </div>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.35em] mb-4 drop-shadow-md text-[#E8C86B]/90 font-medium animate-text-glow"
+              className="text-xs sm:text-sm uppercase tracking-[0.35em] mb-4 drop-shadow-md dyn-text-gold font-medium animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               ✦ {t("hero.subtitle")} ✦
@@ -446,21 +659,21 @@ export default function Home() {
           </FadeSection>
 
           <FadeSection delay={0.15}>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] mb-2 text-gray-300/70 font-light">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] mb-2 dyn-text-body font-normal">
               {t("hero.invite")}
             </p>
           </FadeSection>
 
           <FadeSection delay={0.3}>
             <h2
-              className="text-base sm:text-xl uppercase tracking-[0.22em] mb-1 font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]"
+              className="text-base sm:text-xl uppercase tracking-[0.22em] mb-1 font-semibold dyn-text-title drop-shadow-[0_0_8px_rgba(255,255,255,0.1)] animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("hero.title")}
             </h2>
             <h1
               className="text-3xl sm:text-6xl md:text-7xl mb-4 drop-shadow-[0_2px_10px_rgba(232,200,107,0.45)] animate-text-glow"
-              style={{ color: "var(--color-gold)", fontFamily: "var(--font-script)" }}
+              style={{ color: "var(--dynamic-gold)", fontFamily: "var(--font-script)" }}
             >
               <RevealText text={t("hero.cursiveTitle")} delay={0.2} />
             </h1>
@@ -468,19 +681,19 @@ export default function Home() {
 
           <FadeSection delay={0.45} className="flex flex-col items-center w-full">
             <h2
-              className="text-4xl sm:text-7xl md:text-8xl font-bold tracking-tight mb-2 text-white drop-shadow-lg"
+              className="text-4xl sm:text-7xl md:text-8xl font-bold tracking-tight mb-2 dyn-text-title animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text="Jason" delay={0.4} />
             </h2>
             <span
               className="text-3xl sm:text-5xl block mb-2 font-medium animate-text-glow"
-              style={{ color: "var(--color-gold)", fontFamily: "var(--font-script)" }}
+              style={{ color: "var(--dynamic-gold)", fontFamily: "var(--font-script)" }}
             >
               &
             </span>
             <h2
-              className="text-4xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white drop-shadow-lg"
+              className="text-4xl sm:text-7xl md:text-8xl font-bold tracking-tight dyn-text-title animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text="María" delay={0.6} />
@@ -492,7 +705,7 @@ export default function Home() {
               <GoldDiamond />
             </div>
             <p
-              className="text-xs sm:text-base uppercase tracking-[0.2em] font-semibold text-[#E8C86B] animate-text-glow"
+              className="text-xs sm:text-base uppercase tracking-[0.2em] font-semibold dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("hero.date")}
@@ -500,7 +713,7 @@ export default function Home() {
           </FadeSection>
 
           <FadeSection delay={0.75}>
-            <p className="text-xs sm:text-sm mt-8 italic max-w-sm text-gray-300/80 font-light leading-relaxed px-4">
+            <p className="text-xs sm:text-sm mt-8 italic max-w-sm dyn-text-body font-normal leading-relaxed px-4">
               {t("hero.tagline")}
             </p>
           </FadeSection>
@@ -508,11 +721,12 @@ export default function Home() {
           <FadeSection delay={0.85}>
             <motion.button
               onClick={scrollToStory}
-              className="mt-12 text-[#E8C86B] cursor-pointer"
+              className="mt-12 cursor-pointer"
+              style={{ color: "var(--dynamic-gold)" }}
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-xl sm:text-2xl drop-shadow-[0_0_8px_rgba(232,200,107,0.6)] animate-text-glow">
+              <span className="text-xl sm:text-2xl animate-text-glow">
                 ↓
               </span>
             </motion.button>
@@ -522,25 +736,33 @@ export default function Home() {
 
         {/* ═══ QUOTE ═══ */}
         <section className="section-spacing flex flex-col items-center text-center w-full max-w-2xl mx-auto relative z-20">
+          <ScrollingSparkles count={5} />
           <FadeSection>
-            <div className="relative p-6 sm:p-12 rounded-3xl border border-[#E8C86B]/25 bg-[#0a180e]/40 backdrop-blur-md max-w-xl mx-auto shadow-2xl overflow-hidden group">
+            <div
+              style={{
+                backgroundColor: "var(--dynamic-card-bg)",
+                borderColor: "var(--dynamic-card-border)",
+                boxShadow: "0 10px 30px -10px var(--dynamic-shadow)"
+              }}
+              className="relative p-6 sm:p-12 rounded-3xl border backdrop-blur-md max-w-xl mx-auto shadow-2xl overflow-hidden group transition-all duration-300"
+            >
               {/* Shimmer highlighting line */}
-              <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-[#E8C86B]/10 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
+              <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-[var(--dynamic-gold)]/10 to-transparent -translate-x-full animate-shimmer pointer-events-none" />
               
               <blockquote
-                className="text-sm sm:text-lg leading-relaxed italic text-white/90 font-light"
+                className="text-lg sm:text-2xl leading-relaxed italic dyn-text-title font-normal"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 &ldquo;{t("quote.text")}&rdquo;
               </blockquote>
-              <p className="mt-5 text-xs sm:text-sm font-semibold tracking-wider text-[#E8C86B] uppercase animate-text-glow">
+              <p className="mt-5 text-sm sm:text-base font-semibold tracking-wider dyn-text-gold uppercase animate-text-glow">
                 {t("quote.author")}
               </p>
             </div>
           </FadeSection>
-          <FadeSection delay={0.25}>
-            <div className="mt-8">
-              <SunMoonSymbol />
+          <FadeSection delay={0.25} className="w-full flex justify-center">
+            <div className="w-full max-w-sm mt-4">
+              <SacredGeometry3D />
             </div>
           </FadeSection>
         </section>
@@ -550,26 +772,27 @@ export default function Home() {
 
         {/* ═══ STORY ═══ */}
         <section ref={storyRef} className="section-spacing flex flex-col items-center text-center w-full max-w-3xl mx-auto relative z-20 scroll-mt-20">
+          <ScrollingSparkles count={10} />
           <FadeSection>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.25em] mb-2 text-[#E8C86B] animate-text-glow"
+              className="text-sm sm:text-base uppercase tracking-[0.25em] mb-2 dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("story.intro")}
             </p>
             <h2
-              className="text-xl sm:text-4xl mb-4 text-white font-semibold animate-white-glow"
+              className="text-2xl sm:text-5xl mb-4 dyn-text-title font-semibold animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text={t("story.title")} />
             </h2>
-            <span className="text-xl text-[#E8C86B] block animate-pulse animate-text-glow">
+            <span className="text-xl dyn-text-gold block animate-pulse animate-text-glow">
               ♡
             </span>
           </FadeSection>
 
           <FadeSection delay={0.15}>
-            <p className="mt-6 text-xs sm:text-base leading-relaxed max-w-xl text-gray-300/90 font-light px-2">
+            <p className="mt-6 text-sm sm:text-lg leading-relaxed max-w-xl dyn-text-body font-normal px-2">
               {t("story.description")}
             </p>
           </FadeSection>
@@ -577,14 +800,14 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-12 w-full">
             <FadeSection delay={0.25}>
               <TiltCard className="w-full">
-                <div className="glass-card p-5 sm:p-8 text-center h-full border border-green-950/40 hover:border-[#E8C86B]/25">
+                <div className="glass-card p-5 sm:p-8 text-center h-full">
                   <h3
-                    className="text-lg sm:text-2xl mb-3 text-white font-semibold animate-white-glow"
+                    className="text-xl sm:text-3xl mb-3 dyn-text-title font-semibold animate-white-glow"
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
                     {t("story.mariaTitle")}
                   </h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-gray-300/80 font-light">
+                  <p className="text-sm sm:text-base leading-relaxed dyn-text-body font-normal">
                     {t("story.mariaDesc")}
                   </p>
                 </div>
@@ -593,14 +816,14 @@ export default function Home() {
             
             <FadeSection delay={0.4}>
               <TiltCard className="w-full">
-                <div className="glass-card p-5 sm:p-8 text-center h-full border border-green-950/40 hover:border-[#E8C86B]/25">
+                <div className="glass-card p-5 sm:p-8 text-center h-full">
                   <h3
-                    className="text-lg sm:text-2xl mb-3 text-white font-semibold animate-white-glow"
+                    className="text-xl sm:text-3xl mb-3 dyn-text-title font-semibold animate-white-glow"
                     style={{ fontFamily: "var(--font-heading)" }}
                   >
                     {t("story.jasonTitle")}
                   </h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-gray-300/80 font-light">
+                  <p className="text-sm sm:text-base leading-relaxed dyn-text-body font-normal">
                     {t("story.jasonDesc")}
                   </p>
                 </div>
@@ -609,7 +832,7 @@ export default function Home() {
           </div>
 
           <FadeSection delay={0.5}>
-            <p className="mt-10 text-xs sm:text-base italic max-w-lg text-[#E8C86B]/90 font-light leading-relaxed px-4">
+            <p className="mt-10 text-sm sm:text-lg italic max-w-lg dyn-text-gold font-light leading-relaxed px-4">
               {t("story.jointSpace")}
             </p>
           </FadeSection>
@@ -620,15 +843,16 @@ export default function Home() {
 
         {/* ═══ CEREMONY DETAILS ═══ */}
         <section className="section-spacing flex flex-col items-center text-center w-full max-w-3xl mx-auto relative z-20">
+          <ScrollingSparkles count={8} />
           <FadeSection>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.25em] mb-2 text-[#E8C86B] animate-text-glow"
+              className="text-sm sm:text-base uppercase tracking-[0.25em] mb-2 dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("ceremony.title")}
             </p>
             <h2
-              className="text-xl sm:text-4xl mb-12 text-white font-semibold animate-white-glow"
+              className="text-2xl sm:text-5xl mb-12 dyn-text-title font-semibold animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text={t("ceremony.subtitle")} />
@@ -681,14 +905,14 @@ export default function Home() {
           {/* Google Maps Integration (Updated to User Coordinates) */}
           <FadeSection delay={0.45} className="w-full mt-6 sm:mt-8">
             <TiltCard className="w-full">
-              <div className="glass-card p-4 sm:p-6 flex flex-col gap-4 border border-[#E8C86B]/20">
+              <div className="glass-card p-4 sm:p-6 flex flex-col gap-4">
                 <h4
-                  className="text-xs uppercase tracking-[0.25em] font-semibold text-center animate-text-glow"
-                  style={{ color: "var(--color-gold)", fontFamily: "var(--font-heading)" }}
+                  className="text-xs uppercase tracking-[0.25em] font-semibold text-center animate-text-glow dyn-text-gold"
+                  style={{ fontFamily: "var(--font-heading)" }}
                 >
                   {t("ceremony.locationTitle")} Map
                 </h4>
-                <div className="w-full h-64 sm:h-[350px] overflow-hidden rounded-2xl border border-[#E8C86B]/15 dark-map-container shadow-inner">
+                <div className="w-full h-64 sm:h-[350px] overflow-hidden rounded-2xl border dark-map-container shadow-inner" style={{ borderColor: "var(--dynamic-card-border)" }}>
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3767.7320279626783!2d-76.46418542500697!3d-6.539289293453549!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91b0a135413dac8b%3A0x95984b4f1f7fe36e!2sESTERO%20DEL%20RIO%20MAYO!5e1!3m2!1ses-419!2spe!4v1779552329184!5m2!1ses-419!2spe"
                     width="100%"
@@ -699,7 +923,7 @@ export default function Home() {
                     referrerPolicy="no-referrer-when-downgrade"
                   ></iframe>
                 </div>
-                <p className="text-[11px] sm:text-xs text-center text-gray-300/80 leading-relaxed font-light">
+                <p className="text-xs sm:text-sm text-center dyn-text-body leading-relaxed font-normal">
                   {t("ceremony.locationDesc")} — {t("ceremony.locationDetail")}
                 </p>
               </div>
@@ -707,7 +931,7 @@ export default function Home() {
           </FadeSection>
 
           <FadeSection delay={0.55}>
-            <p className="mt-12 text-xs sm:text-base italic max-w-md text-gray-300/80 font-light leading-relaxed px-4">
+            <p className="mt-12 text-sm sm:text-lg italic max-w-md dyn-text-body font-normal leading-relaxed px-4">
               {t("ceremony.giftNote")}
             </p>
           </FadeSection>
@@ -718,15 +942,16 @@ export default function Home() {
 
         {/* ═══ COUNTDOWN ═══ */}
         <section className="section-spacing flex flex-col items-center text-center w-full max-w-2xl mx-auto relative z-20">
+          <ScrollingSparkles count={5} />
           <FadeSection>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.25em] mb-2 text-[#E8C86B] animate-text-glow"
+              className="text-sm sm:text-base uppercase tracking-[0.25em] mb-2 dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("countdown.title")}
             </p>
             <h2
-              className="text-xl sm:text-4xl mb-10 text-white font-semibold animate-white-glow"
+              className="text-2xl sm:text-5xl mb-10 dyn-text-title font-semibold animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text={t("countdown.subtitle")} />
@@ -743,15 +968,16 @@ export default function Home() {
 
         {/* ═══ SACRED ELEMENTS / PLANTS ═══ */}
         <section className="section-spacing flex flex-col items-center text-center w-full max-w-4xl mx-auto relative z-20">
+          <ScrollingSparkles count={8} />
           <FadeSection>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.25em] mb-2 text-[#E8C86B] animate-text-glow"
+              className="text-sm sm:text-base uppercase tracking-[0.25em] mb-2 dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("elements.title")}
             </p>
             <h2
-              className="text-xl sm:text-4xl mb-12 text-white font-semibold animate-white-glow"
+              className="text-2xl sm:text-5xl mb-12 dyn-text-title font-semibold animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text={t("elements.subtitle")} />
@@ -790,15 +1016,16 @@ export default function Home() {
 
         {/* ═══ RSVP / WHATSAPP FORM ═══ */}
         <section className="section-spacing flex flex-col items-center text-center w-full max-w-xl mx-auto pb-32 relative z-20">
+          <ScrollingSparkles count={6} />
           <FadeSection>
             <p
-              className="text-xs sm:text-sm uppercase tracking-[0.25em] mb-2 text-[#E8C86B] animate-text-glow"
+              className="text-sm sm:text-base uppercase tracking-[0.25em] mb-2 dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("rsvp.title")}
             </p>
             <h2
-              className="text-xl sm:text-4xl mb-10 text-white font-semibold animate-white-glow"
+              className="text-2xl sm:text-5xl mb-10 dyn-text-title font-semibold animate-white-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               <RevealText text={t("rsvp.subtitle")} />
@@ -809,11 +1036,11 @@ export default function Home() {
             <form
               id="rsvp-form"
               onSubmit={handleSubmit}
-              className="glass-card p-6 sm:p-10 w-full flex flex-col gap-6 text-left border border-[#E8C86B]/20 relative overflow-hidden"
+              className="glass-card p-6 sm:p-10 w-full flex flex-col gap-6 text-left relative overflow-hidden"
             >
               {/* Gold top vine ornament */}
               <div className="flex justify-center mb-1">
-                <svg width="80" height="24" viewBox="0 0 80 24" fill="none" className="text-[#E8C86B]/80">
+                <svg width="80" height="24" viewBox="0 0 80 24" fill="none" style={{ color: "var(--dynamic-gold)" }} className="opacity-80">
                   <path
                     d="M40 4 C 32 12, 22 14, 6 14 M40 4 C 48 12, 58 14, 74 14 M40 4 L 40 22"
                     stroke="currentColor"
@@ -830,7 +1057,7 @@ export default function Home() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="guest-name"
-                  className="text-xs uppercase tracking-[0.2em] font-semibold text-[#E8C86B] animate-text-glow"
+                  className="text-sm uppercase tracking-[0.2em] font-semibold dyn-text-gold animate-text-glow"
                 >
                   {t("rsvp.nameLabel")}
                 </label>
@@ -843,13 +1070,13 @@ export default function Home() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  className="px-4 py-3.5 rounded-xl border border-[#E8C86B]/20 bg-[#040905]/50 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#E8C86B]/40 focus:border-[#E8C86B]/40 transition-all font-light"
+                  className="px-4 py-3.5 rounded-xl border border-[var(--dynamic-card-border)] bg-[var(--dynamic-card-bg)] text-[var(--dynamic-text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--dynamic-gold)]/40 focus:border-[var(--dynamic-gold)]/40 transition-all font-normal placeholder:text-[var(--dynamic-text)]/60"
                 />
               </div>
 
               {/* Attendance Selection Custom Grid */}
               <div className="flex flex-col gap-3">
-                <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#E8C86B] animate-text-glow">
+                <span className="text-sm uppercase tracking-[0.2em] font-semibold dyn-text-gold animate-text-glow">
                   {t("rsvp.attendanceLabel")}
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -858,23 +1085,23 @@ export default function Home() {
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, attendance: "yes" }))
                     }
-                    className={`relative flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all duration-300 border bg-[#040905]/40 select-none ${
+                    className={`relative flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all duration-300 border select-none ${
                       formData.attendance === "yes"
-                        ? "border-[#E8C86B] shadow-[0_0_15px_rgba(232,200,107,0.18)] bg-[#0a180e]/60"
-                        : "border-[#E8C86B]/15 hover:border-[#E8C86B]/40 hover:bg-[#040905]/55"
+                        ? "border-[var(--dynamic-gold)] shadow-[0_0_15px_rgba(232,200,107,0.18)] bg-[var(--dynamic-card-bg)]/80"
+                        : "border-[var(--dynamic-card-border)] hover:border-[var(--dynamic-gold)]/40 bg-[var(--dynamic-card-bg)]/45"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">🌿</span>
-                      <span className="text-sm font-semibold text-white leading-tight">
+                      <span className="text-base font-semibold dyn-text-title leading-tight">
                         {t("rsvp.yes")}
                       </span>
                     </div>
                     <div
                       className={`w-5.5 h-5.5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
                         formData.attendance === "yes"
-                          ? "border-[#E8C86B] bg-[#E8C86B]"
-                          : "border-gray-500 bg-transparent"
+                          ? "border-[var(--dynamic-gold)] bg-[var(--dynamic-gold)]"
+                          : "border-[var(--dynamic-text)]/40 bg-transparent"
                       }`}
                     >
                       {formData.attendance === "yes" && (
@@ -900,23 +1127,23 @@ export default function Home() {
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, attendance: "no" }))
                     }
-                    className={`relative flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all duration-300 border bg-[#040905]/40 select-none ${
+                    className={`relative flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all duration-300 border select-none ${
                       formData.attendance === "no"
-                        ? "border-[#E8C86B] shadow-[0_0_15px_rgba(232,200,107,0.18)] bg-[#1c120c]/40"
-                        : "border-[#E8C86B]/15 hover:border-[#E8C86B]/40 hover:bg-[#040905]/55"
+                        ? "border-[var(--dynamic-gold)] shadow-[0_0_15px_rgba(232,200,107,0.18)] bg-[var(--dynamic-card-bg)]/80"
+                        : "border-[var(--dynamic-card-border)] hover:border-[var(--dynamic-gold)]/40 bg-[var(--dynamic-card-bg)]/45"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">✨</span>
-                      <span className="text-sm font-semibold text-white leading-tight">
+                      <span className="text-base font-semibold dyn-text-title leading-tight">
                         {t("rsvp.no")}
                       </span>
                     </div>
                     <div
                       className={`w-5.5 h-5.5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
                         formData.attendance === "no"
-                          ? "border-[#E8C86B] bg-[#E8C86B]"
-                          : "border-gray-500 bg-transparent"
+                          ? "border-[var(--dynamic-gold)] bg-[var(--dynamic-gold)]"
+                          : "border-[var(--dynamic-text)]/40 bg-transparent"
                       }`}
                     >
                       {formData.attendance === "no" && (
@@ -943,7 +1170,7 @@ export default function Home() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="guest-message"
-                  className="text-xs uppercase tracking-[0.2em] font-semibold text-[#E8C86B] animate-text-glow"
+                  className="text-sm uppercase tracking-[0.2em] font-semibold dyn-text-gold animate-text-glow"
                 >
                   {t("rsvp.messageLabel")}
                 </label>
@@ -955,7 +1182,7 @@ export default function Home() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, message: e.target.value }))
                   }
-                  className="px-4 py-3 rounded-xl border border-[#E8C86B]/20 bg-[#040905]/50 text-white text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#E8C86B]/40 focus:border-[#E8C86B]/40 transition-all font-light"
+                  className="px-4 py-3 rounded-xl border border-[var(--dynamic-card-border)] bg-[var(--dynamic-card-bg)] text-[var(--dynamic-text)] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--dynamic-gold)]/40 focus:border-[var(--dynamic-gold)]/40 transition-all font-normal placeholder:text-[var(--dynamic-text)]/60"
                 />
               </div>
 
@@ -963,17 +1190,14 @@ export default function Home() {
               <button
                 id="rsvp-submit"
                 type="submit"
-                className="mt-2 py-4 px-6 rounded-full text-xs uppercase tracking-[0.2em] font-bold transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(232,200,107,0.35)] cursor-pointer text-black flex items-center justify-center gap-3 font-semibold"
-                style={{
-                  background: "linear-gradient(135deg, var(--color-gold), #C5A85A)",
-                }}
+                className="mt-2 py-4 px-6 rounded-full text-sm uppercase tracking-[0.2em] font-bold transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(232,200,107,0.35)] cursor-pointer dyn-btn-gold flex items-center justify-center gap-3 font-semibold"
               >
                 <svg
                   width="18"
                   height="18"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="text-black shrink-0"
+                  className="shrink-0"
                 >
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.03-5.118-2.905-6.993-1.876-1.875-4.357-2.904-6.996-2.904-5.438 0-9.863 4.421-9.867 9.867-.001 1.702.461 3.361 1.336 4.8l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.021-.963-.263-.099-.455-.149-.648.149-.193.297-.748.963-.918 1.16-.17.197-.341.222-.638.074-.297-.149-1.253-.462-2.386-1.472-.882-.787-1.478-1.759-1.651-2.056-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.648-1.561-.888-2.138-.233-.562-.471-.485-.648-.494-.167-.008-.36-.01-.553-.01-.193 0-.507.073-.772.36-.265.287-1.01.987-1.01 2.406s1.026 2.793 1.17 2.991c.144.198 2.01 3.069 4.87 4.307.68.294 1.21.469 1.623.6.683.217 1.302.186 1.793.113.547-.081 1.758-.718 2.005-1.411.247-.693.247-1.287.173-1.411z" />
                 </svg>
@@ -984,7 +1208,7 @@ export default function Home() {
 
           {/* Yin Yang symbol */}
           <FadeSection delay={0.3}>
-            <div className="mt-16 w-24 h-24 relative opacity-40 animate-slow-rotate filter drop-shadow-[0_0_10px_rgba(232,200,107,0.3)]">
+            <div className="mt-16 w-24 h-24 relative opacity-40 animate-slow-rotate" style={{ filter: "drop-shadow(0 0 10px var(--dynamic-gold-glow))" }}>
               <Image
                 src="/assets/yinyang_symbol.png"
                 alt="Yin Yang Symbol"
@@ -997,7 +1221,7 @@ export default function Home() {
 
           <FadeSection delay={0.4}>
             <p
-              className="mt-8 text-xs uppercase tracking-[0.25em] text-[#E8C86B] animate-text-glow"
+              className="mt-8 text-sm uppercase tracking-[0.25em] dyn-text-gold animate-text-glow"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               Jason & María · 2027
@@ -1005,6 +1229,6 @@ export default function Home() {
           </FadeSection>
         </section>
       </main>
-    </div>
+    </motion.div>
   );
 }

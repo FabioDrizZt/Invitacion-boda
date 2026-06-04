@@ -53,12 +53,12 @@ export default function Countdown() {
       {timeItems.map((item, idx) => (
         <div
           key={idx}
-          className="glass-card flex flex-col items-center py-2.5 sm:py-5 border border-[#E8C86B]/20 shadow-lg w-[70px] sm:w-[110px] transition-transform duration-300 hover:scale-105"
+          className="glass-card flex flex-col items-center py-2.5 sm:py-5 shadow-lg w-[70px] sm:w-[110px] transition-transform duration-300 hover:scale-105"
         >
-          <span className="text-xl sm:text-4xl font-serif text-white font-semibold tracking-tight drop-shadow-[0_0_8px_rgba(232,200,107,0.3)] animate-white-glow">
+          <span className="text-xl sm:text-4xl font-serif dyn-text-title font-semibold tracking-tight drop-shadow-[0_0_8px_rgba(232,200,107,0.3)] animate-white-glow">
             {String(item.value).padStart(2, "0")}
           </span>
-          <span className="text-[9px] sm:text-xs uppercase tracking-wider text-[#C5A85A] font-semibold mt-1 animate-text-glow">
+          <span className="text-[9px] sm:text-xs uppercase tracking-wider dyn-text-gold font-semibold mt-1 animate-text-glow">
             {item.label}
           </span>
         </div>
