@@ -17,6 +17,8 @@ import { Sparkles, Heart, Check, Send } from "lucide-react";
 import { triggerGoldConfetti } from "../components/animations/GoldConfetti";
 import SacredGeometry3D from "../components/animations/SacredGeometry3D";
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 /* ── Reusable Section Fade-In ── */
 function FadeSection({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
@@ -523,7 +525,7 @@ export default function Home() {
         style={{ opacity: dynamicSideVineOpacity }}
       >
         <Image
-          src="/assets/ayahuasca_border.png"
+          src={`${BASE_PATH}/assets/ayahuasca_border.png`}
           alt="Ayahuasca Liana Left"
           fill
           className="object-cover object-left"
@@ -535,7 +537,7 @@ export default function Home() {
         style={{ opacity: dynamicSideVineOpacity }}
       >
         <Image
-          src="/assets/ayahuasca_border.png"
+          src={`${BASE_PATH}/assets/ayahuasca_border.png`}
           alt="Ayahuasca Liana Right"
           fill
           className="object-cover object-left scale-x-[-1]"
@@ -572,7 +574,7 @@ export default function Home() {
         }}
       >
         <Image
-          src="/assets/rio_mayo_bg.jpg"
+          src={`${BASE_PATH}/assets/rio_mayo_bg.jpg`}
           alt="Jungle background río Mayo"
           fill
           className="object-cover"
@@ -593,7 +595,7 @@ export default function Home() {
         }}
       >
         <Image
-          src="/assets/jungle_dawn_bg.png"
+          src={`${BASE_PATH}/assets/jungle_dawn_bg.png`}
           alt="Jungle sunrise background río Mayo"
           fill
           className="object-cover"
@@ -843,7 +845,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full">
             <FadeSection delay={0.1}>
               <CeremonyCard
-                iconSrc="/assets/icon_calendar.png"
+                iconSrc={`${BASE_PATH}/assets/icon_calendar.png`}
                 iconAlt="Calendar"
                 title={t("ceremony.dateTitle")}
                 description={t("ceremony.dateDesc")}
@@ -853,7 +855,7 @@ export default function Home() {
             
             <FadeSection delay={0.2}>
               <CeremonyCard
-                iconSrc="/assets/icon_clock.png"
+                iconSrc={`${BASE_PATH}/assets/icon_clock.png`}
                 iconAlt="Clock"
                 title={t("ceremony.timeTitle")}
                 description={t("ceremony.timeDesc")}
@@ -863,7 +865,7 @@ export default function Home() {
             
             <FadeSection delay={0.3}>
               <CeremonyCard
-                iconSrc="/assets/icon_location.png"
+                iconSrc={`${BASE_PATH}/assets/icon_location.png`}
                 iconAlt="Location"
                 title={t("ceremony.locationTitle")}
                 description={t("ceremony.locationDesc")}
@@ -873,7 +875,7 @@ export default function Home() {
             
             <FadeSection delay={0.4}>
               <CeremonyCard
-                iconSrc="/assets/icon_dresscode.png"
+                iconSrc={`${BASE_PATH}/assets/icon_dresscode.png`}
                 iconAlt="Dress code"
                 title={t("ceremony.dressTitle")}
                 description={t("ceremony.dressDesc")}
@@ -968,7 +970,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 w-full">
             <FadeSection delay={0.1}>
               <PlantCard
-                imageSrc="/assets/ayahuasca_liana.png"
+                imageSrc={`${BASE_PATH}/assets/ayahuasca_liana.png`}
                 name={t("elements.ayahuascaName")}
                 description={t("elements.ayahuascaDesc")}
               />
@@ -976,7 +978,7 @@ export default function Home() {
             
             <FadeSection delay={0.25}>
               <PlantCard
-                imageSrc="/assets/chacruna_leaves.png"
+                imageSrc={`${BASE_PATH}/assets/chacruna_leaves.png`}
                 name={t("elements.chacrunaName")}
                 description={t("elements.chacrunaDesc")}
               />
@@ -984,7 +986,7 @@ export default function Home() {
             
             <FadeSection delay={0.4}>
               <PlantCard
-                imageSrc="/assets/bobinsana_flower.png"
+                imageSrc={`${BASE_PATH}/assets/bobinsana_flower.png`}
                 name={t("elements.bobinsanaName")}
                 description={t("elements.bobinsanaDesc")}
               />
@@ -1191,7 +1193,7 @@ export default function Home() {
           <FadeSection delay={0.3}>
             <div className="mt-16 w-24 h-24 relative opacity-40 animate-slow-rotate" style={{ filter: "drop-shadow(0 0 10px var(--dynamic-gold-glow))" }}>
               <Image
-                src="/assets/yinyang_symbol.png"
+                src={`${BASE_PATH}/assets/yinyang_symbol.png`}
                 alt="Yin Yang Symbol"
                 fill
                 className="object-contain filter invert opacity-90"
